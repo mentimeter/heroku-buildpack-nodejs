@@ -146,8 +146,17 @@ yarn_2_install() {
   echo "Running 'yarn install' with yarn.lock"
   cd "$build_dir" || return
 
+  if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
+    if has_yarn_workspace_plugin_installed "$build_dir"; then
+      echo "Running with focused workspace $YARN2_FOCUS_WORKSPACE"
+      # echo doo-dah to allow multiple focused workspaces eg build application
+      monitor "yarn-2-install" yarn workspaces focus $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
+    else
+      echo "No workspaces plugin detected!"
+      exit 1
+    fi
   # If there is no cache we can't run immutable cache because a cache will be created by default
-  if ! has_yarn_cache "$build_dir"; then
+  elif ! has_yarn_cache "$build_dir"; then
     monitor "yarn-2-install" yarn install --immutable 2>&1
   else
     monitor "yarn-2-install" yarn install --immutable --immutable-cache 2>&1
@@ -175,13 +184,18 @@ yarn_prune_devdependencies() {
     cd "$build_dir" || return
 
     if has_yarn_workspace_plugin_installed "$build_dir"; then
-      echo "Running 'yarn workspaces focus --all --production'"
       meta_set "workspace-plugin-present" "true"
 
       # The cache is removed beforehand because the command is running an install on devDeps, and
       # it will not remove the existing dependencies beforehand.
       rm -rf "$cache_dir"
-      monitor "yarn-prune" yarn workspaces focus --all --production
+      if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
+        echo "Skipping pruning because workspace is focused already"
+      else
+        echo "Running 'yarn workspaces focus --production'"
+        monitor "yarn-prune" yarn workspaces focus --all --production
+      fi
+
       meta_set "skipped-prune" "false"
     else
       meta_set "workspace-plugin-present" "false"
