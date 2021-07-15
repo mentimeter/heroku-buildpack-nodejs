@@ -146,7 +146,18 @@ yarn_2_install() {
   echo "Running 'yarn install' with yarn.lock"
   cd "$build_dir" || return
 
-  monitor "yarn-2-install" yarn install --immutable 2>&1
+  if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
+    if has_yarn_workspace_plugin_installed "$build_dir"; then
+      echo "Running with focused workspace $YARN2_FOCUS_WORKSPACE"
+      # echo doo-dah to allow multiple focused workspaces eg build application
+      monitor "yarn-2-install" yarn workspaces focus $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
+    else
+      echo "No workspaces plugin detected!"
+      exit 1
+    fi
+  else
+    monitor "yarn-2-install" yarn install --immutable 2>&1
+  fi
 }
 
 yarn_prune_devdependencies() {
@@ -172,6 +183,11 @@ yarn_prune_devdependencies() {
       meta_set "skipped-prune" "true"
       return 0
     fi
+    if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
+      echo "Skipping pruning because workspace is focused already"
+      meta_set "skipped-prune" "true"
+      return 0
+    fi 
     cd "$build_dir" || return
     echo "Running 'yarn heroku prune'"
     export YARN_PLUGINS="${buildpack_dir}/yarn2-plugins/prune-dev-dependencies/bundles/@yarnpkg/plugin-prune-dev-dependencies.js"
