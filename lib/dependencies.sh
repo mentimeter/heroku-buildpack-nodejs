@@ -150,7 +150,11 @@ yarn_2_install() {
     if has_yarn_workspace_plugin_installed "$build_dir"; then
       echo "Running with focused workspace $YARN2_FOCUS_WORKSPACE"
       # echo doo-dah to allow multiple focused workspaces eg build application
-      monitor "yarn-2-install" yarn workspaces focus $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
+      if [ ! -z "$YARN2_FOCUS_WORKSPACE_PRODUCTION" ]; then
+        monitor "yarn-2-install" yarn workspaces focus --production $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
+      else
+        monitor "yarn-2-install" yarn workspaces focus $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
+      fi
     else
       echo "No workspaces plugin detected!"
       exit 1
