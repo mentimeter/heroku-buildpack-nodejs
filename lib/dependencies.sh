@@ -186,8 +186,8 @@ yarn_prune_devdependencies() {
       return 0
     fi
     if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
-      echo "Skipping pruning because workspace is focused already"
-      meta_set "skipped-prune" "true"
+      monitor "yarn-2-install" yarn workspaces focus --production $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
+      meta_set "skipped-prune" "false"
       return 0
     fi 
     cd "$build_dir" || return
