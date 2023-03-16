@@ -148,8 +148,8 @@ yarn_2_install() {
 
   if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
     if has_yarn_workspace_plugin_installed "$build_dir"; then
-      npm i -g zx
-      ./scripts/split-that-shit.sh
+      monitor "install-split" yarn workspaces focus @mentimeter/app-split
+      monitor "split-script" ./scripts/split-that-shit.sh
       echo "Running with focused workspace $YARN2_FOCUS_WORKSPACE"
       # echo doo-dah to allow multiple focused workspaces eg build application
       monitor "yarn-2-install" yarn workspaces focus $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
