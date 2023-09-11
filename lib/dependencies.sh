@@ -146,10 +146,17 @@ yarn_2_install() {
   echo "Running 'yarn install' with yarn.lock"
   cd "$build_dir" || return
 
-  if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
+  if [ ! -z "$YARN2_FOCUS_WORKSPACE_PRODUCTION_ONLY" ]; then
+    if has_yarn_workspace_plugin_installed "$build_dir"; then
+      echo "Running with focused workspace production $YARN2_FOCUS_WORKSPACE_PRODUCTION_ONLY"
+      monitor "yarn-2-install" yarn workspaces focus --production $(echo $YARN2_FOCUS_WORKSPACE_PRODUCTION_ONLY) 2>&1
+    else
+      echo "No workspaces plugin detected!"
+      exit 1
+    fi
+  elif [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
     if has_yarn_workspace_plugin_installed "$build_dir"; then
       echo "Running with focused workspace $YARN2_FOCUS_WORKSPACE"
-      # echo doo-dah to allow multiple focused workspaces eg build application
       monitor "yarn-2-install" yarn workspaces focus $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
     else
       echo "No workspaces plugin detected!"
@@ -183,11 +190,15 @@ yarn_prune_devdependencies() {
       meta_set "skipped-prune" "true"
       return 0
     fi
-    if [ ! -z "$YARN2_FOCUS_WORKSPACE" ]; then
+    if [ ! -z "$YARN2_FOCUS_WORKSPACE" ] || [ ! -z "$YARN2_FOCUS_WORKSPACE_PRODUCTION_ONLY" ]; then
+      if [ "$YARN2_FOCUS_WORKSPACE_PRODUCTION_POST_INSTALL" == "true" ]; then
+        echo "Focusing for production post install $YARN2_FOCUS_WORKSPACE"
+        monitor "yarn-2-install" yarn workspaces focus --production $(echo $YARN2_FOCUS_WORKSPACE) 2>&1
+      fi
       echo "Skipping pruning because workspace is focused already"
       meta_set "skipped-prune" "true"
       return 0
-    fi 
+    fi
     cd "$build_dir" || return
     echo "Running 'yarn heroku prune'"
     export YARN_PLUGINS="${buildpack_dir}/yarn2-plugins/prune-dev-dependencies/bundles/@yarnpkg/plugin-prune-dev-dependencies.js"
