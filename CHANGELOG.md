@@ -2,6 +2,84 @@
 
 ## main
 
+## v219 (2023-08-10)
+
+- Added Node.js version 16.20.2.
+- Added Node.js version 18.17.1.
+- Added Node.js version 20.5.1.
+    
+## v218 (2023-07-24)
+
+- Added Node.js version 20.5.0.
+
+## v217 (2023-07-19)
+
+- Added Node.js version 18.17.0.
+
+## v216 (2023-07-07)
+
+- Added Node.js version 20.4.0.
+- Added Yarn version 3.6.1.
+
+## v215 (2023-06-21)
+
+- Added Node.js version 20.3.1, 18.16.1, 16.20.1.
+
+## v214 (2023-06-20)
+
+- Added Yarn version 4.0.0-rc.45.
+- Added Node.js version 20.3.0.
+
+## v213 (2023-05-24)
+
+- Added node version 20.2.0.
+- Added yarn version 4.0.0-rc.44.
+
+## v212 (2023-05-09)
+
+- Added node version 20.1.0.
+- Added yarn version 4.0.0-rc.43, 3.5.1.
+- Drop all support and references to the now end-of-life heroku-18.
+
+## v211 (2023-04-20)
+
+- Add metrics and tests for Node.js 20.x line
+
+## v210 (2023-04-20)
+ 
+- Added node version 20.0.0.
+
+## v209 (2023-04-17)
+
+- Added node version 18.16.0.
+
+## v208 (2023-04-11)
+
+- Added node version 19.9.0.
+
+## v207 (2023-04-03)
+
+- Added node version 16.20.0.
+- Added yarn version 4.0.0-rc.42, 4.0.0-rc.41.
+
+## v206 (2023-03-24)
+
+- Added node versions 19.8.0, 19.8.1
+- Added yarn version 3.5.0
+
+## v205 (2023-03-13)
+
+- Added node version 18.15.0
+- Added yarn version 4.0.0-rc.40
+
+## v204 (2023-03-03)
+
+- Switch to inventory-based Node.js and Yarn version resolver ([#1061](https://github.com/heroku/heroku-buildpack-nodejs/pull/1061))
+
+## v203 (2023-02-10)
+
+- Allow yarn version selection for yarn berry projects ([#1060](https://github.com/heroku/heroku-buildpack-nodejs/pull/1060))
+
 ## v202 (2022-11-03)
 
 - Update go to 1.19 and recompile resolve-version ([#1050](https://github.com/heroku/heroku-buildpack-nodejs/pull/1050))
