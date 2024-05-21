@@ -3,6 +3,7 @@
 YQ="$BP_DIR/lib/vendor/yq-$(get_os)"
 
 detect_yarn_2() {
+  set -x
   local uses_yarn="$1"
   local build_dir="$2"
   local yml_metadata
@@ -18,6 +19,7 @@ detect_yarn_2() {
   else
     echo "false"
   fi
+  set +x
 }
 
 has_yarn_cache() {
